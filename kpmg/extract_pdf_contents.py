@@ -36,7 +36,7 @@ def pdfsToTxt(folderPath):
         try:
             insert_result = stat_coll.insert_one(statute_dict)
             if insert_result.acknowledged:
-                print("Document inserted into statute_txts with _id " + str(insert_result.inserted_id))
+                print("Document inserted into db kmpg, collection statutes, with _id " + str(insert_result.inserted_id))
         except DuplicateKeyError as e :
             print("Id already in database: " + str(e))
 
@@ -54,4 +54,4 @@ def format_txt_filename(original_pdf, language) :
     ".txt"
 
 
-pdfsToTxt("C:\\KPMG\\kpmg\\pdf")
+pdfsToTxt(".\\pdf")
