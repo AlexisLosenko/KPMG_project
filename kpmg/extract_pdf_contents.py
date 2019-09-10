@@ -21,8 +21,10 @@ def pdfsToTxt(folderPath):
         pdf_text = encode_newlines(str(pdf_extract))
 
         language = doc._.language["language"]
-        txt_file = open(format_txt_filename(f, language), "w+")
+        txt_filename = format_txt_filename(f, language)
+        txt_file = open(txt_filename, "w+")
         txt_file.write(pdf_text)
+        print("Txt created: " + txt_filename)
         txt_file.close()
 
         statute_dict = {"_id" : os.path.basename(f).replace(".pdf", ""),
