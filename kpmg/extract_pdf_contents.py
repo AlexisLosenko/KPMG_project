@@ -1,4 +1,5 @@
 import os
+import glob
 import spacy
 from pymongo.errors import DuplicateKeyError
 from spacy_langdetect import LanguageDetector
@@ -18,32 +19,49 @@ def pdfsToTxt(folderPath):
         for file in f:
             if ".pdf" in file:
                 files.append(os.path.join(r, file))
+
     for f in files:
-        pdf_img = Image.open(convert_to_img(f, 300))
-        pdf_string = pytesseract.image_to_string(pdf_img)
-        doc = nlp(pdf_string)
+        existing_txts = glob.glob(format_txt_filename(f, "dummy").replace("dummy", "*"))
+        if existing_txts :
+            print("TXT file already exists, skipping text detection and db insertion")
+        else:
+            #extract text from images
+            image_path_list = convert_to_images(f, 300)
+            total_page_count = str(len(image_path_list))
+            page_count = 0
+            pdf_string = ""
+            for image_path in image_path_list :
+                page_count += 1
+                pdf_img = Image.open(image_path)
+                pdf_string += pytesseract.image_to_string(pdf_img)
+                print("Processed page " + str(page_count) + "/" + total_page_count
+                      + " (" + image_path + ")")
 
-        pdf_text = encode_newlines(pdf_string)
+            #detect language
+            doc = nlp(pdf_string)
+            language = doc._.language["language"]
 
-        language = doc._.language["language"]
-        txt_filename = format_txt_filename(f, language)
-        txt_file = open(txt_filename, "w+")
-        txt_file.write(pdf_text)
-        print("Txt created: " + txt_filename)
-        txt_file.close()
+            #write txt
+            txt_file_path = format_txt_filename(f, language)
+            txt_file = open(txt_file_path, "w+", encoding='utf-8')
+            txt_file.write(pdf_string)
+            print("Txt created: " + txt_file_path)
+            txt_file.close()
 
-        statute_dict = {"_id" : os.path.basename(f).replace(".pdf", ""),
-                        "pdf_txt_content" : pdf_text,
-                        "language" : language}
-        client = MongoClient()
-        db = client.kpmg
-        stat_coll = db.statutes
-        try:
-            insert_result = stat_coll.insert_one(statute_dict)
-            if insert_result.acknowledged:
-                print("Document inserted into db kmpg, collection statutes, with _id " + str(insert_result.inserted_id))
-        except DuplicateKeyError as e :
-            print("Id already in database: " + str(e))
+            #write to db
+            vat_nr = os.path.basename(f).replace(".pdf", "")
+            statute_dict = {"_id" : vat_nr,
+                            "pdf_txt_content" : pdf_string,
+                            "language" : language}
+            client = MongoClient()
+            db = client.kpmg
+            stat_coll = db.statutes
+            try:
+                insert_result = stat_coll.insert_one(statute_dict)
+                if insert_result.acknowledged:
+                    print("Document inserted into db kmpg, collection statutes, with _id " + str(insert_result.inserted_id))
+            except DuplicateKeyError as e :
+                print("Id already in database: " + str(e))
 
 
 def encode_newlines(text) :
@@ -57,19 +75,26 @@ def format_txt_filename(original_pdf, language) :
     language + \
     ".txt"
 
-def convert_to_img(file, resolution) :
+def convert_to_images(file, resolution) :
     file_path = os.path.abspath(file)
-    img_path = file_path.replace("pdf", "png")
+    img_path_template = file_path.replace("\\pdf", "\\png").replace(".pdf", "")
 
-    if os.path.isfile(img_path):
-        print("Image already exists: " + img_path)
+    image_paths = glob.glob(img_path_template + "*")
+    if image_paths :
+        print("Images for " + file_path + " already exist, skipping image conversion")
     else :
-        with WandImg(filename=file_path, resolution=resolution) as img:
-            img.compression_quality = 99
-            img.save(filename=img_path)
-            print("Image created: " + img_path)
+        with WandImg(filename=file_path, resolution=resolution) as source:
+            source.compression_quality = 99
+            images = source.sequence
+            nr_of_pages = len(images)
+            image_paths = []
+            for i in range(nr_of_pages):
+                img_path = img_path_template + "_" + str(i) + ".png"
+                WandImg(images[i]).save(filename=img_path)
+                image_paths.append(img_path)
+            print("Image(s) created: " + str(image_paths))
 
-    return img_path
+    return image_paths
 
 
 pdfsToTxt(".\\pdf")
