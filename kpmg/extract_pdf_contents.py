@@ -7,7 +7,7 @@ from pymongo import MongoClient
 from wand.image import Image as WandImg
 from PIL import Image
 import pytesseract
-pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files (x86)\Tesseract-OCR\tesseract.exe'
+pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 nlp = spacy.load("en_core_web_sm")
 nlp.add_pipe(LanguageDetector(), name="language_detector", last=True)
@@ -62,7 +62,7 @@ def pdfsToTxt(folderPath):
                     print("Document inserted into db kmpg, collection statutes, with _id " + str(insert_result.inserted_id))
             except DuplicateKeyError as e :
                 print("Id already in database: " + str(e))
-
+            
 
 def encode_newlines(text) :
     return text.replace("\\r\\n", "\r\n").replace("\\n", "\n").replace("\\r", "\r")
