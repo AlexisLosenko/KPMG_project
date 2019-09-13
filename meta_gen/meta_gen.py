@@ -6,6 +6,11 @@ def dict_gen(element,activity,table02,table04,table05,table06,table07,trad01_jur
 
     meta_dic = dict()
 
+    table06_row = table06[table06['EnterpriseNumber']== element]
+    #check if row is empty -> skip -> otherwise :
+    meta_dic['VAT Number']=  table06_row['EnterpriseNumber']
+    meta_dic["other"] = table06_row["other"]
+
     meta_dic['VAT Number']=  table06['EnterpriseNumber'][table06['EnterpriseNumber']== element].tolist()[0] 
 
     meta_dic['Denomination'] = table05['Denomination'][(table05['EntityNumber'] == element)].tolist()[0]
