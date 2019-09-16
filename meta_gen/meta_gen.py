@@ -4,6 +4,14 @@ def dict_gen(uid, activity, table02, table04, table05, table06, table07,
 
     meta_dic = dict()
 
+    # formatting 2 features from table 06 to match with the code table (table03)
+    temp = table06.JuridicalForm.fillna(0).astype(int).astype(str)
+    temp2 = table06.JuridicalSituation.fillna(0).astype(int).astype(str)
+    temp = ["0" + i if len(i) == 2 else "00" + i if len(i) == 1 else i for i in temp]
+    temp2 = ["0" + i if len(i) == 2 else "00" + i if len(i) == 1 else i for i in temp2]
+    table06.JuridicalForm = temp
+    table06.JuridicalSituation = temp2
+
     table06_row = table06[table06['EnterpriseNumber'] == uid]
     table05_row = table05[table05['EntityNumber'] == uid]
     table05_row_abbr = table05[(table05['EntityNumber'] == uid) & (table05.TypeOfDenomination == 2)]
@@ -15,7 +23,7 @@ def dict_gen(uid, activity, table02, table04, table05, table06, table07,
     table04_row_phone = table04[(table04['EntityNumber'] == uid) & (table04['ContactType'] == 'TEL')]
 
     if len(table06_row) == 0:
-        print('Data for ' + uid + ' not in the csv')
+        print("No data found for vat number " + uid + " in the CSVs")
     else:
         meta_dic['VAT Number'] = table06_row.iloc[0]['EnterpriseNumber']
 
