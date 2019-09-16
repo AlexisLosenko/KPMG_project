@@ -13,13 +13,7 @@ table04 = pd.read_csv('./OpenData/contact.csv')
 table05 = pd.read_csv('./OpenData/denomination.csv')
 table06 = pd.read_csv('./OpenData/enterprise.csv')
 table07 = pd.read_csv('./OpenData/establishment.csv')
-#needed for later...
-temp = table06.JuridicalForm.fillna(0).astype(int).astype(str)
-temp2 = table06.JuridicalSituation.fillna(0).astype(int).astype(str)
-temp = ["0"+i if len(i)==2 else "00"+i if len(i)==1 else i for i in temp]
-temp2 = ["0"+i if len(i)==2 else "00"+i if len(i)==1 else i for i in temp2]
-table06.JuridicalForm = temp
-table06.JuridicalSituation = temp2
+
 
 print('tables loaded')
 #need probably to be re-scraped to match with the pdf's
@@ -50,27 +44,11 @@ def update_statutes_in_db(uids):
     for uid in uids :
         stat_doc = stat_coll.find_one({"_id": uid})
         if stat_doc :
-            #meta_dic = dict_gen(uid, activity, table02, table04, table05, table06, table07,
-            # ActivityGroup_dic,  JuridicalForm_dic, JuridicalSituation_dic, Nace2003_dic, Nace2008_dic, TypeOfEnterprise_dic )
-            #TODO uncomment above and remove below
-            meta_dic = {    "Formatted VAT Number": "0686.796.523",
-                            "Denomination": "A&M RENOVA CONSTRUCT",
-                            "Abbr": "NONE",
-                            "Main activity": [[43999,"Autres activit\u00e9s de construction sp\u00e9cialis\u00e9es"]],
-                            "Secondary activity": "NONE",
-                            "Foundation Date": "26-12-2017",
-                            "Establishment #": 1,
-                            "Establishment StartDate": ["20-03-2018"],
-                            "JuridicalSituation": "Situation normale",
-                            "TypeOfEnterprise": "Entit\u00e9 enregistr\u00e9e personne morale",
-                            "JuridicalForm": "Soci\u00e9t\u00e9 en nom collectif",
-                            "Zipcode": 6210,
-                            "Street": "Rue Albert 1er(FLG)",
-                            "HouseNumber": "51",
-                            "Mail": "NA",
-                            "Phone": "NA"}
+            meta_dic = dict_gen(uid, activity, table02, table04, table05, table06, table07,
+                ActivityGroup_dic,  JuridicalForm_dic, JuridicalSituation_dic, Nace2003_dic, Nace2008_dic, TypeOfEnterprise_dic )
             meta_dic.update(stat_doc) #this way fields in stat_doc do not get overwritten
             stat_coll.update_one({'_id': uid}, {"$set": meta_dic}, upsert=False)
+            print("Found statute with uid " + uid + ". Updated meta data where empty")
 
         else :
             print("Document with uid " + str(uid) + " not found in database")
