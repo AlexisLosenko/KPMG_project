@@ -4,6 +4,14 @@ def dict_gen(element,activity,table02,table04,table05,table06,table07,
 
     meta_dic = dict()
 
+    # formatting 2 features from table 06 to match with the code table (table03)
+    temp = table06.JuridicalForm.fillna(0).astype(int).astype(str)
+    temp2 = table06.JuridicalSituation.fillna(0).astype(int).astype(str)
+    temp = ["0" + i if len(i) == 2 else "00" + i if len(i) == 1 else i for i in temp]
+    temp2 = ["0" + i if len(i) == 2 else "00" + i if len(i) == 1 else i for i in temp2]
+    table06.JuridicalForm = temp
+    table06.JuridicalSituation = temp2
+
     table06_row = table06[table06['EnterpriseNumber'] == element]
     table05_row = table05[table05['EntityNumber'] == element]
     table05_row_abbr = table05[(table05['EntityNumber'] == element) & (table05.TypeOfDenomination == 2)]
