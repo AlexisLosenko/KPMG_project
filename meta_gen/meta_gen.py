@@ -5,7 +5,7 @@ def dict_gen(uid, activity, table02, table04, table05, table06, table07,
 
     meta_dic = dict()
     uid_f = str(uid[:4]+'.'+str(uid[4:7])+'.'+str(uid[7:10]))
-    print(uid_f)
+    uid = int(uid)
     # formatting 2 features from table 06 to match with the code table (table03)
 
     temp = table06.JuridicalForm.fillna(0).astype(int).astype(str)
@@ -26,11 +26,11 @@ def dict_gen(uid, activity, table02, table04, table05, table06, table07,
     table04_row_phone = table04[(table04['EntityNumber'] == uid_f) & (table04['ContactType'] == 'TEL')]
 
     if len(table06_row) == 0:
-        print("No data found for vat number " + uid + " in the CSVs")
+        print("No data found for vat number " + uid_f + " in the CSVs")
     else:
         meta_dic['VAT Number'] = table06_row.iloc[0]['EnterpriseNumber']
 
-        #meta_dic['act object'] = act_obj(uid)
+        meta_dic['act object'] = act_obj(uid)
 
         meta_dic['Denomination'] = table05_row.iloc[0]['Denomination']
 
@@ -108,6 +108,6 @@ def dict_gen(uid, activity, table02, table04, table05, table06, table07,
                 if meta_dic['Secondary activity'][i] == KEY:
                     meta_dic['Secondary activity'][i] = (KEY, VALUE)
 
-        print(meta_dic)
+        #print(meta_dic)
 
     return(meta_dic)
