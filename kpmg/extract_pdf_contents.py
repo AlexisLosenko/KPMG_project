@@ -8,7 +8,7 @@ from wand.image import Image as WandImg
 from PIL import Image
 import pytesseract
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
-
+#SEB path  r'C:\Users\sebch\AppData\Local\Tesseract-OCR\tesseract.exe'
 nlp = spacy.load("en_core_web_sm")
 nlp.add_pipe(LanguageDetector(), name="language_detector", last=True)
 
@@ -90,6 +90,13 @@ def convert_to_images(file, resolution) :
             image_paths = []
             for i in range(nr_of_pages):
                 img_path = img_path_template + "_" + str(i) + ".png"
+                #croping pages (if first pages else the others)
+                if i == 0:
+                    images[i].crop(int(images[i].size[0] * 0.16), int(images[i].size[1] * 0.20), int(images[i].size[0] * 0.95),
+                                int(images[i].size[1] * 0.92))
+                else:
+                    images[i].crop(int(images[i].size[0] * 0.16), int(images[i].size[1] * 0.052), int(images[i].size[0] * 0.95),
+                                int(images[i].size[1] * 0.92))
                 WandImg(images[i]).save(filename=img_path)
                 image_paths.append(img_path)
             print("Image(s) created: " + str(image_paths))
