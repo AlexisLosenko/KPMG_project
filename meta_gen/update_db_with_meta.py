@@ -20,17 +20,17 @@ print('tables loaded')
 vat_numbers = pd.read_json('token.json')
 
 #TODO for testing purpose - remove
-vat_numbers = vat_numbers[:10]
+vat_numbers = vat_numbers[:50]
 
 vat_numbers = "0" + vat_numbers.astype(str)
-#formatting TVA number
-vat_numbers[1]= vat_numbers[0].str[:4] + '.' + vat_numbers[0].str[4:7] + \
+##formatting TVA number not needed here anymore
+#vat_numbers[1]= vat_numbers[0].str[:4] + '.' + vat_numbers[0].str[4:7] + \
                 '.'+vat_numbers[0].str[7:10]
 vat_uids = vat_numbers[0].tolist()
-vat_formatted = vat_numbers[1].tolist()
+#vat_formatted = vat_numbers[1].tolist()
 
 print(vat_uids)
-print(vat_formatted)
+#print(vat_formatted)
 
 
 print('loading dictionaries')
