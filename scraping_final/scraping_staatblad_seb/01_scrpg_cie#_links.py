@@ -29,29 +29,3 @@ class BlogSpider(scrapy.Spider):
 
         with open('token.json', 'w', encoding='utf-8') as g:
             json.dump(self.token, g, ensure_ascii=False, indent=4)  
-
-       
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-### https://www.staatsbladmonitor.be/bedrijfsfiche.html?ondernemingsnummer=0544780506#publicaties
-
-#url = 'https://www.staatsbladmonitor.be/oprichtingen-bedrijven.html?datum=2019-09-05'
-
-#test = simple_get(url)
-#print(test)

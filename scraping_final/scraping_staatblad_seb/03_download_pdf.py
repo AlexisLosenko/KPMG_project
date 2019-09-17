@@ -1,39 +1,48 @@
-import wget
-import pandas as pd
+#import wget
+#import pandas as pd
 import os.path
 import time
 import requests
 from fake_useragent import UserAgent
-import random
+#import random
 import sys
+import json
 
 
 
-print('Beginning file download with get module')
+print('Beginning file download with wget module')
 
-urlstest = "http://www.ejustice.just.fgov.be/tsv_pdf/2019/01/03/19300336.pdf"
+#urlstest = "http://www.ejustice.just.fgov.be/tsv_pdf/2019/01/03/19300336.pdf"
 
-urls = pd.read_json('link_pdf.json')
-urls.drop_duplicates(subset=None, keep='first', inplace=True)
+with open('link_pdf_2018.json', 'r') as f:
+        urls = json.load(f)
 
-urls = urls[0].tolist()
+#urls = pd.read_json('link_pdf_2018.json')
+#urls.drop_duplicates(subset=None, keep='first', inplace=True)
+
+#urls = urls[0].tolist()
 ua = UserAgent()
 
-for i in urls :
+for key in urls :
     try:
         time.sleep(0.1)
-        print(f'trying: {i}')
-        pdfname = i[-12:]
-        if os.path.exists('./pdf/'+ str(pdfname)) is False:
-            wget.download(i, '/home/sebchko/Desktop/KPMG/pdf/')
-#            myfile = requests.get(i, headers={'User-Agent': ua.random})
-            print(f'yo : {i}')
-#            with open(f'pdf/{pdfname}', 'wb') as file:
-#                file.write(myfile.content) 
+        print(f'trying: {urls[key]}')
+        pdfname = str(urls[key]['source_date'])+'_'+str(urls[key]['VAT'])
+        #print(pdfname)
+        if os.path.exists('./pdf/'+str(pdfname)+'.pdf') is False:
+            #wget.download(key, './pdf')
+            #wget -O ./pdfname key
+
+            myfile = requests.get(key, headers={'User-Agent': ua.random})
+            print(f'yo : {key}')
+            with open(f'pdf/{pdfname}.pdf', 'wb') as file:
+                file.write(myfile.content)
         else:
             pass
 
     except:
-        print(f'ERROR url: {i}')
-        print(sys.exc_info())  
+        print(f'ERROR url: {key}')
+        print(sys.exc_info())
+
+
 
