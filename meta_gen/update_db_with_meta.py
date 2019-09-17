@@ -25,7 +25,7 @@ vat_numbers = vat_numbers[:50]
 vat_numbers = "0" + vat_numbers.astype(str)
 ##formatting TVA number not needed here anymore
 #vat_numbers[1]= vat_numbers[0].str[:4] + '.' + vat_numbers[0].str[4:7] + \
-                '.'+vat_numbers[0].str[7:10]
+#                '.'+vat_numbers[0].str[7:10]
 vat_uids = vat_numbers[0].tolist()
 #vat_formatted = vat_numbers[1].tolist()
 
