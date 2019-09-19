@@ -56,12 +56,18 @@ def pdfsToTxt(folderPath):
             client = MongoClient()
             db = client.kpmg
             stat_coll = db.statutes
-            try:
+            stat_doc = stat_coll.find_one({"_id": uid})
+            if stat_doc:
+                stat_coll.update_one({'_id': uid},
+                                     {'$set': {
+                                         f"documents.{date}": {'text': pdf_string, 'object': act_obj(uid[1:], date)}}},
+                                     upsert=True
+                                     )
+            else:
                 insert_result = stat_coll.insert_one(statute_dict)
                 if insert_result.acknowledged:
-                    print("Document inserted into db kmpg, collection statutes, with _id " + str(insert_result.inserted_id))
-            except DuplicateKeyError as e :
-                print("Id already in database: " + str(e))
+                    print("Document inserted into db kmpg, collection statutes, with _id " + str(
+                        insert_result.inserted_id))
             
 
 def encode_newlines(text) :
