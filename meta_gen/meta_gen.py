@@ -95,18 +95,18 @@ def dict_gen(uid, activity, table02, table04, table05, table06, table07,
                     if meta_dic['Main activity'][1][i] == KEY:
                         meta_dic['Main activity'][1][i] = (KEY, VALUE)
 
-            for i in range(0, len(meta_dic['Secondary activity'])):
-                if meta_dic['Secondary activity'][i] == KEY:
-                    meta_dic['Secondary activity'][i] = (KEY, VALUE)
+                for i in range(0, len(meta_dic['Secondary activity'])):
+                    if meta_dic['Secondary activity'][i] == KEY:
+                        meta_dic['Secondary activity'][i] = (KEY, VALUE)
         else:
             for KEY, VALUE in Nace2008_dic.items():
                 for i in range(0, len(meta_dic['Main activity'][1])):
                     if meta_dic['Main activity'][1][i] == KEY:
                         meta_dic['Main activity'][1][i] = (KEY, VALUE)
 
-            for i in range(0, len(meta_dic['Secondary activity'])):
-                if meta_dic['Secondary activity'][i] == KEY:
-                    meta_dic['Secondary activity'][i] = (KEY, VALUE)
+                for i in range(0, len(meta_dic['Secondary activity'])):
+                    if meta_dic['Secondary activity'][i] == KEY:
+                        meta_dic['Secondary activity'][i] = (KEY, VALUE)
 
         #print(meta_dic)
 
