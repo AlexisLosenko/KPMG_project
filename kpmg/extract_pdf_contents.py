@@ -7,8 +7,14 @@ from pymongo import MongoClient
 from wand.image import Image as WandImg
 from PIL import Image
 import pytesseract
-pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+from scrap_act_object_2 import act_obj
+
+pytesseract.pytesseract.tesseract_cmd = r'C:\Users\sebch\AppData\Local\Tesseract-OCR\tesseract.exe'
 #SEB path  r'C:\Users\sebch\AppData\Local\Tesseract-OCR\tesseract.exe'
+#original path  r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+
+### German, nederlands and frech Tesseract packages can be download from  : https://github.com/tesseract-ocr/tesseract/wiki/Data-Files
+
 nlp = spacy.load("en_core_web_sm")
 nlp.add_pipe(LanguageDetector(), name="language_detector", last=True)
 
@@ -33,7 +39,7 @@ def pdfsToTxt(folderPath):
             for image_path in image_path_list :
                 page_count += 1
                 pdf_img = Image.open(image_path)
-                pdf_string += pytesseract.image_to_string(pdf_img)
+                pdf_string += pytesseract.image_to_string(pdf_img, lang='fra+deu+nld')
                 print("Processed page " + str(page_count) + "/" + total_page_count
                       + " (" + image_path + ")")
 
@@ -49,9 +55,11 @@ def pdfsToTxt(folderPath):
             txt_file.close()
 
             #write to db
-            vat_nr = os.path.basename(f).replace(".pdf", "")
-            statute_dict = {"_id" : vat_nr,
-                            "pdf_txt_content" : pdf_string,
+            vat_nr_date = os.path.basename(f).replace(".pdf", "")
+            uid = vat_nr_date[-10:]
+            date = vat_nr_date[-19:-11]
+            statute_dict = {"_id" : uid,
+                            "documents": {f'{date}': {'text' : pdf_string, 'object': act_obj(uid[1:], date)}},
                             "language" : language}
             client = MongoClient()
             db = client.kpmg
@@ -59,16 +67,14 @@ def pdfsToTxt(folderPath):
             stat_doc = stat_coll.find_one({"_id": uid})
             if stat_doc:
                 stat_coll.update_one({'_id': uid},
-                                     {'$set': {
-                                         f"documents.{date}": {'text': pdf_string, 'object': act_obj(uid[1:], date)}}},
-                                     upsert=True
-                                     )
+                                      {'$set': {f"documents.{date}": {'text': pdf_string, 'object': act_obj(uid[1:], date)}}},
+                                      upsert=True
+                                      )
             else:
                 insert_result = stat_coll.insert_one(statute_dict)
                 if insert_result.acknowledged:
                     print("Document inserted into db kmpg, collection statutes, with _id " + str(
                         insert_result.inserted_id))
-            
 
 def encode_newlines(text) :
     return text.replace("\\r\\n", "\r\n").replace("\\n", "\n").replace("\\r", "\r")
