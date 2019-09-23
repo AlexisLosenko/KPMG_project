@@ -7,7 +7,7 @@ db = client.kpmg
 stat_coll = db.statutes
 
 
-key_word = ["Art", "Article", 'Art.', 'Art,', 'Ast', 'Ari', "art" ,"At", "ARTICLE", "ART", 'Ant', 'Artikel', 'ARTIKEL' , 'article']
+key_word = ["Art", "Article", 'Art.', 'Art,', 'Ast', 'Ari', "art", "At", "ARTICLE", "ART", 'Ant', 'Artikel', 'ARTIKEL' , 'article']
 
 filename = r'C:\Users\sebch\Desktop\kpmg\GitHub Repo\KPMG_project\scraping_final\scraping_staatblad_seb\token_2018.json'
 with open(filename, 'r') as f:
@@ -24,7 +24,7 @@ for uid in uids:
 
         #checking if it is a consitution doc
         obje = doc_data[date]['object']
-        constitution = ['CONSTITUTION', 'OPRICHTING']
+        constitution = ['CONSTITUTION', 'OPRICHTING', 'STATUTS', 'STATUTEN']
         for obj in obje.split():
             if obj in constitution:
 
