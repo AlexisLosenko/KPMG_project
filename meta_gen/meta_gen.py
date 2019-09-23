@@ -19,7 +19,7 @@ def dict_gen(uid, activity, table02, table04, table05, table06, table07,
     table05_row = table05[table05['EntityNumber'] == uid_f]
     table05_row_abbr = table05[(table05['EntityNumber'] == uid_f) & (table05.TypeOfDenomination == 2)]
     table01_row_main = activity[(activity['EntityNumber'] == uid_f) & (activity.Classification == 'MAIN')].astype(str)
-    table01_row_sec = activity[(activity['EntityNumber'] == uid_f) & (activity.Classification == 'SECO')]
+    table01_row_sec = activity[(activity['EntityNumber'] == uid_f) & (activity.Classification == 'SECO')].astype(str)
     table07_row = table07[table07['EnterpriseNumber'] == uid_f]
     table02_row = table02[table02['EntityNumber'] == uid_f]
     table04_row_mail = table04[(table04['EntityNumber'] == uid_f) & (table04['ContactType'] == 'EMAIL')]
