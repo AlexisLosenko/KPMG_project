@@ -1,5 +1,5 @@
 import pandas as pd
-from scrap_act_object import act_obj
+#from scrap_act_object import act_obj
 def dict_gen(uid, activity, table02, table04, table05, table06, table07,
              ActivityGroup_dic, JuridicalForm_dic, JuridicalSituation_dic, Nace2003_dic, Nace2008_dic, TypeOfEnterprise_dic):
 
@@ -30,7 +30,7 @@ def dict_gen(uid, activity, table02, table04, table05, table06, table07,
     else:
         meta_dic['VAT Number'] = table06_row.iloc[0]['EnterpriseNumber']
 
-        meta_dic['act object'] = act_obj(uid)
+        #meta_dic['act object'] = act_obj(uid)
 
         meta_dic['Denomination'] = table05_row.iloc[0]['Denomination']
 
