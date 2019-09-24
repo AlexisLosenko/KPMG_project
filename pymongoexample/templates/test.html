@@ -1,0 +1,26 @@
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>CSV to html</title>
+  <meta name="description" content="The HTML5 Herald">
+  <meta name="author" content="SitePoint">
+  
+</head>
+
+<body>
+  <h1>Test</h1>
+
+  <input type="text" id="numberTVA" placeholder="TVA number">
+  <input type="submit" id="submitTVA" value="Submit">
+
+  {% for x in company %}
+            <h3>{{x["_id"]}}</h3>
+            <h3>{{x["Language"]}}</h3>
+            <h3>{{x["Denomination"]}}</h3>
+         {% endfor %}
+
+
+  <script src="test.js"></script>
+</body>
+</html>
