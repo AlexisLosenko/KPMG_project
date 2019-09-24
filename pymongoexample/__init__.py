@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask_pymongo import PyMongo
 
 # from .extentions import mongo
@@ -10,16 +10,21 @@ app.config["MONGO_URI"] = 'mongodb://localhost:27017/kpmg'
 
 mongo = PyMongo(app)
 
-@app.route('/')
+@app.route('/', methods=['GET','POST'])
 def home():
     print('we re here')
+    if request.method == 'POST':
+        check = request.form['numberTVA']
+        print('working? ::', check)
+        return findOne(check)
+
     return render_template("test.html")
 
 
 @app.route('/findOne')
-def findOne():
+def findOne(y):
     try:
-        company = mongo.db.statutes.find({"_id": "0701616341"})
+        company = mongo.db.statutes.find({"_id": y})
         return render_template('test.html', company = company)
     except Exception as e:
         return e 
