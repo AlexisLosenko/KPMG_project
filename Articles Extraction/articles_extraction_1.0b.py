@@ -43,7 +43,7 @@ for uid in uids:
                     translation = translator.translate(text, dest='en')
                     print(translation.text)
                     stat_coll.update_one({'_id': uid},
-                                         {'$set':
+                                         {'$addToSet':
                                               {f"documents.{date}.translation": translation.text}
                                          },
                                          upsert=True
