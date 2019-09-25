@@ -1,5 +1,7 @@
 from pymongo import MongoClient
 import json
+from googletrans import Translator
+from json.decoder import JSONDecodeError
 
 
 client = MongoClient()
