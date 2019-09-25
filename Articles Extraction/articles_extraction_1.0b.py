@@ -1,9 +1,6 @@
 from pymongo import MongoClient
 import json
-from googletrans import Translator
-from json.decoder import JSONDecodeError
 
-translator = Translator()
 
 client = MongoClient()
 db = client.kpmg
@@ -16,7 +13,7 @@ filename = r'C:\Users\sebch\Desktop\kpmg\GitHub Repo\KPMG_project\scraping_final
 with open(filename, 'r') as f:
     uids = json.load(f)
 
-#uids= uids[:10]
+#uids= uids[:50]
 log = []
 
 
@@ -36,18 +33,6 @@ for uid in uids:
 
                 #look for key_word in text splitted
                 text = next(iter(next(iter(doc_data.values())).values()))
-                #text = str(articles)
-                try:
-                    translation = translator.translate(text, dest='en')
-                    stat_coll.update_one({'_id': uid},
-                                         {'$set':
-                                              {f"documents.{date}.translation": translation.text}
-                                         },
-                                         upsert=True
-                                         )
-                    print("traduction added")
-                except JSONDecodeError:
-                    print('unable to translate text')
                 #print(text)
                 split = text.split('\n')
                 #index of each ligne containing one the key_word
@@ -83,20 +68,6 @@ for uid in uids:
                                      }},
                                      upsert=True
                                      )
-                try:
-                    sections_t = [translator.translate(i, dest='en').text for i in sections]
-                    print(sections_t)
-                    stat_coll.update_one({'_id': uid},
-                                         {'$addToSet': {
-                                             f"documents.{date}.sections": {str(sections_t.index(element)): element for
-                                                                            element in
-                                                                            sections_t}
-                                         }},
-                                         upsert=True
-                                         )
-                except JSONDecodeError :
-                    print('unable to translate articles')
-
                 log.append(uid)
                 print(f'added {uid}')
             else :
