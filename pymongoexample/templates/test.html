@@ -11,16 +11,79 @@
 <body>
   <h1>Test</h1>
 
-  <input type="text" id="numberTVA" placeholder="TVA number">
-  <input type="submit" id="submitTVA" value="Submit">
+  <form action="/" method="POST">
+    <input type="text" id="numberTVA"  name="numberTVA" placeholder="TVA number">
+    <input type="text" id="compName"  name="compName" placeholder="Company name">
+    <input type="text" id="creatDate"  name="creatDate" placeholder="YYYYMMDD">
+    <input type="submit" id="submitTVA" value="Submit">
+
+    <style>
+        .collapsible {
+          background-color: #777;
+          color: white;
+          cursor: pointer;
+          padding: 18px;
+          width: 100%;
+          border: none;
+          text-align: left;
+          outline: none;
+          font-size: 15px;
+        }
+        
+        .active, .collapsible:hover {
+          background-color: #555;
+        }
+        
+        .content {
+          display: none;
+          overflow: hidden;
+        }
+        </style>
+
+
+  </form>
+
 
   {% for x in company %}
-            <h3>{{x["_id"]}}</h3>
-            <h3>{{x["Language"]}}</h3>
-            <h3>{{x["Denomination"]}}</h3>
+            
+            <div>
+              <p>TVA n°: {{x["_id"]}}</p>
+              <p>Company name: {{x["Denomination"]}}</p>
+              <p>Juridical form: {{x["JuridicalForm"]}}</p>
+              <p>Juridical situation: {{x["JuridicalSituation"]}}</p>
+              <p>Type: {{x["TypeOfEnterprise"]}}</p>
+              <p>Foundation date: {{x["Foundation Date"]}}</p>
+              <p>Main activity: {{x["Main Activity"][2008]}}</p>
+              <p>Original language: {{x["Language"]}}</p>
+              <p>Street: {{x["Street"]}}</p>
+              <p>Zipcode: {{x["Zipcode"]}}</p>
+            </div>
+
+            {% for k,v in x["documents"].items() %}
+              <button type="button" class="collapsible">Open Text</button>
+              <div class="content">
+                <p>{{v["text"].replace('\n', '<br/>')|safe}}</p> <!-- TODO: get first item of documents keys, then get text key from it-->
+              </div>
+            {% endfor %}
          {% endfor %}
 
+  <script>
+    var coll = document.getElementsByClassName("collapsible");
+    var i;
 
-  <script src="test.js"></script>
+    for (i = 0; i < coll.length; i++) {
+      coll[i].addEventListener("click", function() {
+        this.classList.toggle("active");
+        var content = this.nextElementSibling;
+        if (content.style.display === "block") {
+          content.style.display = "none";
+        } else {
+          content.style.display = "block";
+        }
+      });
+    }
+    
+  </script>
+  <!-- <script src="test.js"></script> -->
 </body>
 </html>
