@@ -7,11 +7,14 @@ db = client.kpmg
 stat_coll = db.statutes
 
 
-key_word = ["Art", "Article", 'Art.', 'Art,', 'Ast', 'Ari', "art", "At", "ARTICLE", "ART", 'Ant', 'Artikel', 'ARTIKEL' , 'article']
+key_word = ["Art", "Article", 'Art.', 'Art,', 'Ast', 'Ari', "art", "At", "ARTICLE", "ART", 'Ant', 'Artikel', 'ARTIKEL', 'article', 'Articdle']
 
-filename = r'C:\Users\sebch\Desktop\kpmg\GitHub Repo\KPMG_project\scraping_final\scraping_staatblad_seb\token_2018.json'
+filename = r'C:\Users\sebch\Desktop\kpmg\GitHub Repo\KPMG_project\scraping_final\scraping_staatblad_seb\token_test.json'
 with open(filename, 'r') as f:
     uids = json.load(f)
+
+#uids= uids[:50]
+log = []
 
 
 for uid in uids:
@@ -30,6 +33,7 @@ for uid in uids:
 
                 #look for key_word in text splitted
                 text = next(iter(next(iter(doc_data.values())).values()))
+                #print(text)
                 split = text.split('\n')
                 #index of each ligne containing one the key_word
                 cut_index = []
@@ -64,6 +68,7 @@ for uid in uids:
                                      }},
                                      upsert=True
                                      )
+                log.append(uid)
                 print(f'added {uid}')
             else :
                 pass
@@ -73,3 +78,6 @@ for uid in uids:
         print(f'cannot parse document for {uid}')
     except AttributeError:
         print(f'cannot find document object for {uid}')
+
+with open('log.json', 'w', encoding='utf-8') as g:
+    json.dump(log, g, ensure_ascii=False, indent=4)

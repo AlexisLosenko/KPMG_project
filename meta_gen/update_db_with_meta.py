@@ -17,10 +17,10 @@ table07 = pd.read_csv('./OpenData/establishment.csv')
 
 print('tables loaded')
 #need probably to be re-scraped to match with the pdf's
-vat_numbers = pd.read_json('token.json')
+vat_numbers = pd.read_json('token_test.json')
 
 #TODO for testing purpose - remove
-vat_numbers = vat_numbers[:50]
+#vat_numbers = vat_numbers[:50]
 
 vat_numbers = "0" + vat_numbers.astype(str)
 ##formatting TVA number not needed here anymore
