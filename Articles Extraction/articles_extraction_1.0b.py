@@ -13,8 +13,9 @@ filename = r'C:\Users\sebch\Desktop\kpmg\GitHub Repo\KPMG_project\scraping_final
 with open(filename, 'r') as f:
     uids = json.load(f)
 
-#uids= uids[:50]
+uids= uids[:10]
 log = []
+log_trad_full = []
 
 
 for uid in uids:
@@ -33,6 +34,22 @@ for uid in uids:
 
                 #look for key_word in text splitted
                 text = next(iter(next(iter(doc_data.values())).values()))
+                print(type(text))
+                #text = str(articles)
+                try:
+                    translator = Translator()
+                    translation = translator.translate(text, dest='en')
+                    print(translation.text)
+                    stat_coll.update_one({'_id': uid},
+                                         {'$set':
+                                              {f"documents.{date}.translation": translation.text}
+                                         },
+                                         upsert=True
+                                         )
+                    print("traduction added")
+                    log_trad_full.append(uid)
+                except JSONDecodeError:
+                    print(JSONDecodeError)
                 #print(text)
                 split = text.split('\n')
                 #index of each ligne containing one the key_word
