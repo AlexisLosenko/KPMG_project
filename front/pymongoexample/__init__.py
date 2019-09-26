@@ -28,6 +28,9 @@ def home():
             date = request.form['creatDate']
             print('creation date: ', date)
             return findByDate(date)
+        elif request.form['creatDate'] == '' and request.form['numberTVA'] == '' and request.form['compName'] == '':
+            print('find everything')
+            return findEverything()
         else:
             print('nothing to look for')
             return 'nothing to look for'
@@ -73,6 +76,12 @@ def findByDate(y):
     # company = textDir.text
 
     return render_template('test.html', company = company, date = y)
+
+
+@app.route('/findEverything')
+def findEverything():
+    company = mongo.db.statutes.find()
+    return render_template('test.html', company = company)
 
 # def create_app(config_object='pymongoexample.settings'):
 #     app = Flask(__name__)
