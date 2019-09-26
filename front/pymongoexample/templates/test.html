@@ -1,0 +1,162 @@
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>CSV to html</title>
+  <meta name="description" content="The HTML5 Herald">
+  <meta name="author" content="SitePoint">
+  <link rel="stylesheet" href="../CSS/test.css">
+  <style>
+    body {
+      margin: 0;
+      background-color: rgba(224, 224, 224, 0.37);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    header {
+      background-color: red
+    }
+
+    .block1 {
+      float: left;
+      width: 400px;
+      
+      height: 180px;
+    }
+
+    .block2 {
+      float: left;
+      margin-top: 57px;
+    }
+    
+    .documents {
+      clear: left;
+      width: 90%;
+      margin: auto;
+    }
+
+    .metadata {
+      width: 25%;
+      margin-right: 5%;
+      float: left;
+      margin-bottom: 15px;
+    }
+
+    .metadata p {
+      
+      color: rgb(250, 249, 223);
+      background-color:  	#012F8E;
+      border-bottom: solid rgb(231, 231, 231) 1px;
+      margin: 0;
+      padding: 0;
+      border-radius: 3px;
+      padding: 5px
+    }
+
+    .textDiv {
+      float: left;
+      width: 70%;
+    }
+
+
+    .collapsible {
+      border-radius: 4px;
+      background-color: #777;
+      color: white;
+      cursor: pointer;
+      padding: 18px;
+      width: 100%;
+      border: none;
+      text-align: left;
+      outline: none;
+      font-size: 15px;
+    }
+    
+    .active, .collapsible:hover {
+      background-color: #555;
+    }
+    
+    .content {
+      display: none;
+      /* overflow: hidden; */
+      background-color: white;
+      height: 90vh;
+      overflow: auto;
+      border-left: solid #555 1px
+    }
+
+    .content p {
+      padding-left: 9px
+    }
+    </style>
+  
+</head>
+
+<body>
+
+  <header>
+    <div class="block1">
+      
+      <img src="https://edebex.com/wp-content/uploads/2018/01/kpmg_logo-new.png" alt="Logo">
+    </div>
+    <div class="block2">
+      <form action="/" method="POST">
+        <input type="text" id="numberTVA"  name="numberTVA" placeholder="TVA number">
+        <input type="text" id="compName"  name="compName" placeholder="Company name">
+        <input type="text" id="creatDate"  name="creatDate" placeholder="YYYYMMDD">
+        <input type="submit" id="submitTVA" value="Submit">
+      </form>
+    </div>
+  </header>
+
+
+  
+
+
+  {% for x in company %}
+            <div class="documents">
+              <b></b>
+              <div class="metaData">
+                <p><b>TVA n°:</b> {{x["_id"]}}</p>
+                <p><b>Company name:</b> {{x["Denomination"]}}</p>
+                <p><b>Juridical form:</b> {{x["JuridicalForm"]}}</p>
+                <p><b>Juridical situation:</b> {{x["JuridicalSituation"]}}</p>
+                <p><b>Type:</b> {{x["TypeOfEnterprise"]}}</p>
+                <p><b>Foundation date:</b> {{x["Foundation Date"]}}</p>
+                
+                <p><b>Original language:</b> {{x["Language"]}}</p>
+                <p><b>Street:</b> {{x["Street"]}}</p>
+                <p><b>Zipcode:</b> {{x["Zipcode"]}}</p>
+              </div>
+  
+              {% for k,v in x["documents"].items() %}
+                <div class="textDiv">
+                  <button type="button" class="collapsible">Open Text</button>
+                  <div class="content">
+                    <p>{{v["text"].replace('\n', '<br/>')|safe}}</p> <!-- TODO: get first item of documents keys, then get text key from it-->
+                  </div>
+                </div>
+              {% endfor %}
+            </div><br/>
+         {% endfor %}
+
+  <script>
+    var coll = document.getElementsByClassName("collapsible");
+    var i;
+
+    for (i = 0; i < coll.length; i++) {
+      coll[i].addEventListener("click", function() {
+        this.classList.toggle("active");
+        var content = this.nextElementSibling;
+        if (content.style.display === "block") {
+          content.style.display = "none";
+        } else {
+          content.style.display = "block";
+        }
+      });
+    }
+    
+  </script>
+  <!-- <script src="test.js"></script> -->
+</body>
+</html>
