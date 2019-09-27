@@ -97,7 +97,6 @@
 
   <header>
     <div class="block1">
-      <!-- https://edebex.com/wp-content/uploads/2018/01/kpmg_logo-new.png -->
       <img src="https://edebex.com/wp-content/uploads/2018/01/kpmg_logo-new.png" alt="Logo">
     </div>
     <div class="block2">
@@ -110,47 +109,44 @@
     </div>
   </header>
 
-
-  
-
-
   {% for x in company %}
-            <div class="documents">
-              <b></b>
-              <div class="metaData">
-                <p><b>TVA n°:</b> {{x["_id"]}}</p>
-                <p><b>Company name:</b> {{x["Denomination"]}}</p>
-                <p><b>Juridical form:</b> {{x["JuridicalForm"]}}</p>
-                <p><b>Juridical situation:</b> {{x["JuridicalSituation"]}}</p>
-                <p><b>Type:</b> {{x["TypeOfEnterprise"]}}</p>
-                <p><b>Foundation date:</b> {{x["Foundation Date"]}}</p>
-                
-                <p><b>Original language:</b> {{x["Language"]}}</p>
-                <p><b>Street:</b> {{x["Street"]}}</p>
-                <p><b>Zipcode:</b> {{x["Zipcode"]}}</p>
-              </div>
-  
-              {% for k,v in x["documents"].items() %}
-                <div class="textDiv">
-                  <button type="button" class="collapsible">Open Text</button>
-                  <div class="content">
-                    <p>{{v["text"].replace('\n', '<br/>')|safe}}</p> 
-                  </div>
-                </div>
-                {% for q in v["sections"]%}
+    <div class="documents">
+      
+      <div class="metaData">
+        <p><b>TVA n°:</b> {{x["_id"]}}</p>
+        <p><b>Company name:</b> {{x["Denomination"]}}</p>
+        <p><b>Juridical form:</b> {{x["JuridicalForm"]}}</p>
+        <p><b>Juridical situation:</b> {{x["JuridicalSituation"]}}</p>
+        <p><b>Type:</b> {{x["TypeOfEnterprise"]}}</p>
+        <p><b>Foundation date:</b> {{x["Foundation Date"]}}</p>      
+        <p><b>Original language:</b> {{x["Language"]}}</p>
+        <p><b>Street:</b> {{x["Street"]}}</p>
+        <p><b>Zipcode:</b> {{x["Zipcode"]}}</p>
+      </div>
 
-                  {% for (h, g) in q.items()%}
-                    <div class="textDiv">
-                      <button type="button" class="collapsible">article {{h}}</button>
-                      <div class="content">
-                        <p>{{g.replace('\n', '<br/>')|safe}}</p> 
-                      </div>
-                    </div>
-                  {% endfor %}   
-                {% endfor %}
-              {% endfor %}
-            </div><br/>
-         {% endfor %}
+      {% for k,v in x["documents"].items() %}
+        <div class="textDiv">
+          <button type="button" class="collapsible">Open Text</button>
+          <div class="content">
+            <p>{{v["text"].replace('\n', '<br/>')|safe}}</p> 
+          </div>
+        </div>
+        {% for q in v["sections"]%}
+
+          {% for (h, g) in q.items()%}
+            <div class="textDiv">
+              <button type="button" class="collapsible">article {{h}}</button>
+              <div class="content">
+                <p>{{g.replace('\n', '<br/>')|safe}}</p> 
+              </div>
+            </div>
+          {% endfor %} 
+
+        {% endfor %}
+        
+      {% endfor %}
+    </div>
+  {% endfor %}
 
   <script>
     var coll = document.getElementsByClassName("collapsible");
@@ -169,6 +165,5 @@
     }
     
   </script>
-  <!-- <script src="test.js"></script> -->
 </body>
 </html>
