@@ -17,3 +17,22 @@ Database used: Mongodb on default port and localhost
 #4 Article extraction folder. Run articles_extraction_1.0b.py                                 |      DIVIDE ARTICLES + TRANSLATE
 
 Frontend is in front. Run with flask after database exists
+    
+## Front-end
+
+ **Dependencies**
+ 
+ In order for the front to work, make sure you have the following packages installed in the 'pymongoexample' dir:  
+   `pipenv install flask flask-pymongo python-dotenv`  
+ or  
+ `pip install flask flask-pymongo python-dotenv`    
+ Also make sure you have **mongoDb** installed on your machine  
+   
+ 
+ **Launching**   
+   
+ Depending on your mongodb settings or your OS, run the following line to start your mongodb:  
+   `sudo service mongod start` (ubuntu)  
+   
+ To start the flask application, if everything went smoothly, run   
+   `flask run` from your '*/front*' directory.    
